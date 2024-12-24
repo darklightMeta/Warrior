@@ -3,7 +3,7 @@
 
 #include "Items/item.h"
 #include "DrawDebugHelpers.h"
-#include "Warrior/Warrior.h"
+#include "Warrior/DebugMacro.h"
 
 
 // Sets default values
@@ -19,12 +19,19 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UWorld* World = GetWorld();
+	UWorld* World = GetWorld();
 	FVector Location = GetActorLocation();
 	FVector Forward = GetActorForwardVector();
 		
 	DRAW_SPHERE(Location);
-	DRAW_LINE(Location, Location + Forward * 100.f);
+	//DRAW_LINE(Location, Location + Forward * 100.f);
+
+	//DRAW_POINT(Location + Forward * 100.f);
+	DRAW_VECTOR(Location, Location + Forward * 100.f);
+
+	
+		
+	
 }
 
 // Called every frame
