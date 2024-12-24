@@ -5,10 +5,12 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Engine/LocalPlayer.h" 
+#include "Engine/LocalPlayer.h"
+#include  "Camera/CameraComponent.h"
 #include "EnhancedInputComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "GameFramework/SpringArmComponent.h"
 
 
 ABird::ABird()
@@ -35,6 +37,14 @@ ABird::ABird()
 	//BirdMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	//BirdMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->SetupAttachment(RootComponent);
+	SpringArm->TargetArmLength = 1000.f;
+
+	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
+	ViewCamera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
+	
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
 }
