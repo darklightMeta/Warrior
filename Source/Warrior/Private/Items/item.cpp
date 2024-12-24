@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+
 
 
 #include "Items/item.h"
@@ -19,18 +19,7 @@ void AItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//UWorld* World = GetWorld();
 	
-	SetActorLocation(FVector(0.f, 0.f, 100.f));
-	FVector Location = GetActorLocation();
-	FVector Forward = GetActorForwardVector();
-	
-	DRAW_SPHERE(Location);
-	//DRAW_LINE(Location, Location + Forward * 100.f);
-
-	//DRAW_POINT(Location + Forward * 100.f);
-	DRAW_VECTOR(Location, Location + Forward * 100.f);
-
 	
 		
 	
@@ -40,6 +29,24 @@ void AItem::BeginPlay()
 void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	RunningTime += DeltaTime;
+
+	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
+
+	AddActorWorldOffset(FVector(0.f, 0.f, DeltaZ)); // period = 2*pi/K
+	
+//Movement rate in units of cm/s
+	//float MovementRate = 100.f;
+	//float RotationRate = 45.f;
+
+// MovementRate * DeltaTime (cm/s) * (s/frame)	= (cm/frame)
+	//AddActorWorldOffset(FVector(MovementRate * DeltaTime, 0.f, 0.f));
+	//AddActorWorldRotation(FRotator(0.f, RotationRate * DeltaTime, 0.f));
+	DRAW_SPHERE_SINGLE_FRAME(GetActorLocation());
+	DRAW_VECTOR_SINGLE_FRAME(GetActorLocation(), GetActorLocation() + GetActorForwardVector() * 100.f);
+	
+	
 
 }
 
