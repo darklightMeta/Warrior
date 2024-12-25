@@ -1,4 +1,4 @@
-// Copywrite 2024 darklightMeta
+// Copyright 2024 darklightMeta
 
 
 #include "Pawns/Bird.h"
@@ -40,7 +40,7 @@ ABird::ABird()
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
-	SpringArm->TargetArmLength = 1000.f;
+	SpringArm->TargetArmLength = 400.f;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
@@ -61,16 +61,13 @@ void ABird::BeginPlay()
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(BirdMappingContext, 0);
+			
 		}
 	}
 	
 }
 
-void ABird::MoveForward(float Value)
-{
-	//AddActorWorldOffset(FVector(0.f, 0.f, Value * 100.f));
-	UE_LOG(LogTemp, Warning, TEXT("MoveForward: %f"), Value);
-}
+
 
 void ABird::Move(const FInputActionValue& Value)
 {
@@ -81,6 +78,17 @@ void ABird::Move(const FInputActionValue& Value)
 		FVector Forward = GetActorForwardVector();
 		AddMovementInput(Forward, DirectionValue);
 	}
+}
+
+void ABird::Look(const FInputActionValue& Value)
+{
+  const FVector2D LookAxisValue = Value.Get<FVector2D>();
+  if (GetController())
+  {
+	  AddControllerYawInput(LookAxisValue.X);
+	  AddControllerPitchInput(LookAxisValue.Y);
+  	  
+  }
 }
 
 
@@ -98,6 +106,7 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
 	}
 
 	
